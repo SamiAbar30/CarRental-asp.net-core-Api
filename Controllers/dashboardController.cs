@@ -43,49 +43,51 @@ namespace CarRentalWebApi.Controllers
         [Route("vehiculesproch")]
         public JsonResult vehiculesproch()
         {
-            DataTable dt4 = new DataTable();
-            dt4.Columns.Add("immatricule", typeof(string));
-            dt4.Columns.Add("marque", typeof(string));
-            int j = 0;
-            string date = "";
-            string datemoinsAlert = "";
-            int alertt = 0;
-            DataRow dr;
-            dt = new DataTable();
-            dt = ado.crud<DataTable>("select * from contrats", "ExecuteReader");
-            foreach (DataRow rd4 in dt.Rows)
-            {
-
-                date = rd4[10].ToString();
-                alertt = Convert.ToInt32(rd4[14]);
-                datemoinsAlert = Convert.ToDateTime(date).AddDays(-alertt).ToString();
-                //if dyal voiture
-                if ((DateTime.Now <= Convert.ToDateTime(date) &&
-                 DateTime.Now >= Convert.ToDateTime(datemoinsAlert))
-                 )
+            
+                DataTable dt4 = new DataTable();
+                dt4.Columns.Add("immatricule", typeof(string));
+                dt4.Columns.Add("marque", typeof(string));
+                int j = 0;
+                string date = "";
+                string datemoinsAlert = "";
+                int alertt = 0;
+                DataRow dr;
+                dt = new DataTable();
+                dt = ado.crud<DataTable>("select * from contrats", "ExecuteReader");
+                foreach (DataRow rd4 in dt.Rows)
                 {
-                    j++;
-                    dr = dt4.NewRow();
-                    dr[0] = rd4["immatricule"].ToString();
-                    dr[1] = rd4["marque"].ToString();
-                    dt4.Rows.Add(dr);
+              
+
+                    date = rd4[10].ToString();
+                    alertt = Convert.ToInt32(rd4[14]);
+                    datemoinsAlert = Convert.ToDateTime(date).AddDays(-alertt).ToString();
+                    //if dyal voiture
+                    if ((DateTime.Now <= Convert.ToDateTime(date) &&
+                     DateTime.Now >= Convert.ToDateTime(datemoinsAlert))
+                     )
+                    {
+                        j++;
+                        dr = dt4.NewRow();
+                        dr[0] = rd4["immatricule"].ToString();
+                        dr[1] = rd4["marque"].ToString();
+                        dt4.Rows.Add(dr);
 
 
 
 
+                    }
+               
                 }
-
-
-
-
-            }
-            return new JsonResult(dt4);
+                return new JsonResult(dt4);
+          
+            
+          
         }
-        [Route("vehiculesKM")]
-        public JsonResult vehiculesKM()
+        [Route("vehiculesK")]
+        public JsonResult vehiculesK()
         {
             dt = new DataTable();
-            dt = ado.crud<DataTable>("select Immatricule,marque from Contrats where DATEPART(day,Duree_retour) =  DATEPART(day, getdate()) ", "ExecuteReader");
+            dt = ado.crud<DataTable>("select Immatricule,marque,idContrats from Contrats where facturé=0  AND Duree_retour <=  getdate() ", "ExecuteReader");
             return new JsonResult(dt);
         }
         [Route("updatevehiculesKM")]
@@ -94,6 +96,8 @@ namespace CarRentalWebApi.Controllers
         {
             try
             {
+                ado.crud<bool>("update Contrats set facturé=1   where idContrats = '" + dashV.idContrats.ToString() + "'", "ExecuteNonQuery");
+
                 ado.crud<bool>("update Vehicules set disponibilite = 'oui',Kilometrage="+ dashV.Kilometrage + " where Immatricule = '" + dashV.ToString()+ "'", "ExecuteNonQuery");
 
                 return new JsonResult("update Successfully");

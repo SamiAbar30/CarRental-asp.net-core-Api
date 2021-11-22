@@ -38,12 +38,12 @@ namespace CarRentalWebApi.Controllers
                 ado.crud<bool>("insert into Entretien values('" +entretien.Immatricule + "'," + entretien.Km_Actuel + ",'" + entretien.Date_Entretien + "','" + entretien.Type_de_Entretien + "'," + entretien.Cout + ",'" + entretien.Observation + "')", "ExecuteNonQuery");
 
                 return new JsonResult("insert Successfully");
-            }
+        }
             catch
             {
                 return new JsonResult("insert error");
-            }
-        }
+    }
+}
         [HttpPut]
         public JsonResult Put(Entretien entretien)
         {
