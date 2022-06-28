@@ -27,7 +27,7 @@ namespace CarRentalWebApi.Controllers
         public JsonResult Login(Login data)
         {
             dt = new DataTable();
-            if ((int)(ado.crud<int>("select count(*) from UserA where CIN='" + data.CIN + "'and pass='" + data.pass + "'", "ExecuteScalar")) > 0)
+            if ((int)(ado.crud<int>("select count(*) from usera where CIN='" + data.CIN + "'and pass='" + data.pass + "'", "ExecuteScalar")) > 0)
             {
                 return new JsonResult(true);
             }

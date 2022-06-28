@@ -61,13 +61,6 @@ namespace CarRentalWebApi.Controllers
             return new JsonResult(dt);
         }
 
-        [HttpPost]
-        public JsonResult Post(papier papier)
-        {
-
-            ado.crud<bool>("insert into papier values (@imm,@dateAss,@dateAss2,@alertAss,@dateGrise,@dateGrise2,@alertGrise,@dateVisite,@dateVisite2,@alertVisite,@dateauto,@dateauto2,@alertAuto)", "ExecuteNonQuery", hashtable(papier));
-            return new JsonResult("insert Successfully");
-        }
         [HttpPut]
         public JsonResult Put(papier papier)
         {

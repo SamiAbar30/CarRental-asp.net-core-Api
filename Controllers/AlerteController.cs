@@ -87,7 +87,7 @@ namespace CarRentalWebApi.Controllers
 
             //papier
 
-            DataTable dts = ado.crud<DataTable>("select vi.Immatricule,vi.Km_Actuel,Km_Prochain_vidange,Alerte_si_reste from Vidange vi", "ExecuteReader");
+            DataTable dts = ado.crud<DataTable>("select vi.Immatricule,vi.Km_Actuel,Km_Prochain_vidange,Alerte_si_reste from vidange vi", "ExecuteReader");
 
             foreach (DataRow rd4 in dts.Rows)
             {
@@ -106,75 +106,86 @@ namespace CarRentalWebApi.Controllers
 
             foreach (DataRow rd3 in dt1.Rows)
             {
+             
                 try
                 {
                     dateAss = rd3[2].ToString();
                     alertAss = Convert.ToInt32(rd3[3]);
 
+                }
+                catch
+                {
+                    alertAss = 0;
+
+                }
+                try
+                {
                     dateVisite = rd3[8].ToString();
                     alertVisite = Convert.ToInt32(rd3[9]);
 
+                }
+                catch
+                { alertVisite = 0; }
+                try
+                {
                     datecart = rd3[5].ToString();
                     alertcarte = Convert.ToInt32(rd3[6]);
 
+                }
+                catch
+                { alertcarte =0; }
+                try
+                {
                     dateAuto = rd3[11].ToString();
                     alertAuto = Convert.ToInt32(rd3[12]);
 
+                }
+                catch
+                { 
+                    alertAuto = 0; 
+                }
+
+
+
+                    if (dateAss != "") {
                     dateAssMoinalaert = Convert.ToDateTime(dateAss).AddDays(-alertAss).ToString();
-                    dateVisiteMoinalaert = Convert.ToDateTime(dateVisite).AddDays(-alertVisite).ToString();
-                    datecarteMoinalaert = Convert.ToDateTime(datecart).AddDays(-alertcarte).ToString();
-
-                    dateAutoMoinalaert = Convert.ToDateTime(dateAuto).AddDays(-alertAuto).ToString();
-
-
                     // if dyal assurance
-                    if ((DateTime.Now <= Convert.ToDateTime(dateAss) &&
-                        DateTime.Now >= Convert.ToDateTime(dateAssMoinalaert))
-                        || DateTime.Now >= Convert.ToDateTime(dateAss))
+                    if ((DateTime.Now <= Convert.ToDateTime(dateAss) && DateTime.Now >= Convert.ToDateTime(dateAssMoinalaert)) || DateTime.Now >= Convert.ToDateTime(dateAss))
                     {
                         dr = dt2.NewRow();
                         int jours = 0;
-
                         Convert.ToDateTime(dateAss).AddDays(-DateTime.Now.Day).ToString();
                         jours = Convert.ToInt32(Convert.ToDateTime(dateAss).Subtract(DateTime.Now).TotalDays);
-
-
-
-
                         dr[0] = rd3[0].ToString();
                         dr[1] = jours.ToString() + " jours";
-
                         dt2.Rows.Add(dr);
-
-
                     }
 
+                }
 
-
+                if (dateVisite != "")
+                {
+                    dateVisiteMoinalaert = Convert.ToDateTime(dateVisite).AddDays(-alertVisite).ToString();
+                   
                     //if dyal visite
-                    if ((DateTime.Now <= Convert.ToDateTime(dateVisite) &&
-                       DateTime.Now >= Convert.ToDateTime(dateVisiteMoinalaert))
-                       || DateTime.Now >= Convert.ToDateTime(dateVisite))
+                    if ((DateTime.Now <= Convert.ToDateTime(dateVisite) && DateTime.Now >= Convert.ToDateTime(dateVisiteMoinalaert)) || DateTime.Now >= Convert.ToDateTime(dateVisite))
                     {
 
-
                         int jours = 0;
-
                         Convert.ToDateTime(dateVisite).AddDays(-DateTime.Now.Day).ToString();
                         jours = Convert.ToInt32(Convert.ToDateTime(dateVisite).Subtract(DateTime.Now).TotalDays);
-
                         dr = dt2Visite.NewRow();
                         dr[0] = rd3[0].ToString();
                         dr[1] = jours.ToString() + " jours";
                         dt2Visite.Rows.Add(dr);
-
-
                     }
-
+                }
+                if (datecart != "")
+                {
+                    datecarteMoinalaert = Convert.ToDateTime(datecart).AddDays(-alertcarte).ToString();
+                   
                     //if dyal carte
-                    if ((DateTime.Now <= Convert.ToDateTime(datecart) &&
-                     DateTime.Now >= Convert.ToDateTime(datecarteMoinalaert))
-                     || DateTime.Now >= Convert.ToDateTime(datecart))
+                    if ((DateTime.Now <= Convert.ToDateTime(datecart) && DateTime.Now >= Convert.ToDateTime(datecarteMoinalaert)) || DateTime.Now >= Convert.ToDateTime(datecart))
                     {
                         int jours = 0;
 
@@ -189,7 +200,10 @@ namespace CarRentalWebApi.Controllers
 
 
                     }
-
+                }
+                if (datecart != "")
+                {
+                    dateAutoMoinalaert = Convert.ToDateTime(dateAuto).AddDays(-alertAuto).ToString();
                     //if dyal autorisation
                     if ((DateTime.Now <= Convert.ToDateTime(dateAuto) &&
                      DateTime.Now >= Convert.ToDateTime(dateAutoMoinalaert))
@@ -206,20 +220,16 @@ namespace CarRentalWebApi.Controllers
                         dtautori.Rows.Add(dr);
                     }
                 }
-                catch
-                {
-
-                }
             }
-         
-            DataSet ds = new DataSet();
-            ds.Tables.Add(dt2);
-            ds.Tables.Add(dt2Visite);
-            ds.Tables.Add(dtcartegs);
-            ds.Tables.Add(dtautori);
-            ds.Tables.Add(dtAlert);
 
+                DataSet ds = new DataSet();
+                ds.Tables.Add(dt2);
+                ds.Tables.Add(dt2Visite);
+                ds.Tables.Add(dtcartegs);
+                ds.Tables.Add(dtautori);
+                ds.Tables.Add(dtAlert);
 
+            
             return new JsonResult(ds);
         }
       

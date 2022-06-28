@@ -64,11 +64,33 @@ namespace CarRentalWebApi.Controllers
         {
 
             ado.crud<bool>("insert into contrats values (@datecontrat,@realise,@marque,@imatricule,@kmactuel,@idclient,@idClient2,@duree,@duree_depart,@duree_retour,@lieuliv,@lieure,@prix,@alrt,@total,0,@montapayer,@restmontant)", "ExecuteNonQuery", hashtable(contrats));
-            ado.crud<bool>("update Vehicules set Disponibilite='non' where Immatricule ='" + contrats.Immatricule + "'", "ExecuteNonQuery");
-
+            ado.crud<bool>("update vehicules set Disponibilite='non' where Immatricule ='" + contrats.Immatricule + "'", "ExecuteNonQuery");
+            Hashtable cimp = new Hashtable();
+            cimp.Add("idclient", contrats.numpi);
+            cimp.Add("solde", Convert.ToDouble(contrats.Total));
+            cimp.Add("des", "location d'un vehicule : " + contrats.Marque + Environment.NewLine + "du " + contrats.Duree_depart + " au " + contrats.Duree_retour);
+            ado.crud<bool>("insert into comptecliant values (@idclient,@des,@solde)", "ExecuteNonQuery", cimp);
             return new JsonResult("insert Successfully");
         }
-        
+        [HttpPut]
+        public JsonResult put(Contrats contrats)
+        {
+            Hashtable para = new Hashtable();
+            para.Add("idContrats", Convert.ToInt32(contrats.idContrats));
+            para.Add("duree", Convert.ToInt32(contrats.Duree));       
+            para.Add("duree_retour", contrats.Duree_retour);       
+            para.Add("total", Convert.ToDouble(contrats.Total));
+            para.Add("montapayer", Convert.ToDouble(contrats.montantPayé));
+            para.Add("restmontant", Convert.ToDouble(contrats.restmontant));
+            ado.crud<bool>("update contrats set Duree=@duree ,Duree_retour=@duree_retour,Total=@total,montantPayé=@montapayer,restmontant=@restmontant where id=@idContrats", "ExecuteNonQuery", para);
+           Hashtable cimp = new Hashtable();
+            cimp.Add("idclient", contrats.numpi);
+            cimp.Add("solde", Convert.ToDouble(contrats.Total));
+            cimp.Add("des", "location d'un veh-icule : " + contrats.Marque + Environment.NewLine + "du " + contrats.Duree_depart + " au " + contrats.Duree_retour);
+            ado.crud<bool>("insert into comptecliant values (@idclient,@des,@solde)", "ExecuteNonQuery", cimp);
+            return new JsonResult("insert Successfully");
+        }
+
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
@@ -77,9 +99,9 @@ namespace CarRentalWebApi.Controllers
             ado.crud<bool>("delete from contrats where idcontrats = @id", "ExecuteNonQuery", par);
             return new JsonResult("Deleted Successfully");
         }
+        
 
 
-       
 
     }
 }

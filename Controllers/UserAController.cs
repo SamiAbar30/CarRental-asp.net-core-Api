@@ -25,7 +25,7 @@ namespace CarRentalWebApi.Controllers
         public JsonResult get()
         {
             dt = new DataTable();
-            dt = ado.crud<DataTable>("select * from UserA", "ExecuteReader");
+            dt = ado.crud<DataTable>("select * from usera", "ExecuteReader");
             return new JsonResult(dt);
         }
        
@@ -34,7 +34,7 @@ namespace CarRentalWebApi.Controllers
         {
             try
             {
-                ado.crud<bool>(@"insert into UserA values('" + user.CIN + "','" + user.Nomuser + "','" + user.pass + "','" + user.prenomuser + "')", "ExecuteNonQuery");
+                ado.crud<bool>(@"insert into usera values('" + user.CIN + "','" + user.Nomuser + "','" + user.pass + "','" + user.prenomuser + "')", "ExecuteNonQuery");
 
                 return new JsonResult("insert Successfully");
             }
@@ -48,7 +48,7 @@ namespace CarRentalWebApi.Controllers
         {
             try
             {
-                ado.crud<bool>(@"update UserA set Nomuser ='" + user.Nomuser + "',prenomuser='" + user.prenomuser + "',pass='" + user.pass + "' where CIN ='" + user.CIN + "' ", "ExecuteNonQuery");
+                ado.crud<bool>(@"update usera set Nomuser ='" + user.Nomuser + "',prenomuser='" + user.prenomuser + "',pass='" + user.pass + "' where CIN ='" + user.CIN + "' ", "ExecuteNonQuery");
 
                 return new JsonResult("update Successfully");
             }
@@ -61,7 +61,7 @@ namespace CarRentalWebApi.Controllers
         [HttpDelete("{id}")]
         public JsonResult Delete(string id)
         {
-            ado.crud<bool>("delete from UserA where CIN='" +id+ "'", "ExecuteNonQuery");
+            ado.crud<bool>("delete from usera where CIN='" +id+ "'", "ExecuteNonQuery");
             return new JsonResult("Deleted Successfully");
         }
     }

@@ -66,22 +66,35 @@ namespace CarRentalWebApi.Controllers
         public JsonResult get()
         {
             dt = new DataTable();
-            dt = ado.crud<DataTable>("select * from Clients ", "ExecuteReader");
+            dt = ado.crud<DataTable>("select Clienttype,Prenom,Nom,Age,Tel,Numpi from clients ", "ExecuteReader");
             return new JsonResult(dt);
         }
-
+        [Route("CompteCliant/{id}")]
+        public JsonResult CompteCliant(string id)
+        {
+            dt = new DataTable();
+            dt = ado.crud<DataTable>("select * from CompteCliant where numpi ='"+id+"'", "ExecuteReader");
+            return new JsonResult(dt);
+        }
+        [Route("Cliant/{id}")]
+        public JsonResult Cliant(string id)
+        {
+            dt = new DataTable();
+            dt = ado.crud<DataTable>("select * from clients where numpi ='" + id + "'", "ExecuteReader");
+            return new JsonResult(dt);
+        }
         [HttpPost]
         public JsonResult Post(Clients clients)
         {
 
-            ado.crud<bool>("insert into Clients values (@Clienttype,@Civilite,@Prenom,@Nom,@Date_de_naissance,@Age,@Lieu_de_naissance,@Numpermis,@Delivre_le,@Validite,@delivre_a,@Adresse,@Tel,@Type_pi,@Numpi,@Validite_pi,@Delivrer_a_pi,@Societe,@ADresse_de_facturation,@ICE,@Contact,@Listenoir,@identiteimg_recto,@identiteimg_verso,@permi_recto,@permi_verso,@passeport_recto,@passeport_verso)", "ExecuteNonQuery", hashtable(clients));
+            ado.crud<bool>("insert into clients values (@Clienttype,@Civilite,@Prenom,@Nom,@Date_de_naissance,@Age,@Lieu_de_naissance,@Numpermis,@Delivre_le,@Validite,@delivre_a,@Adresse,@Tel,@Type_pi,@Numpi,@Validite_pi,@Delivrer_a_pi,@Societe,@ADresse_de_facturation,@ICE,@Contact,@Listenoir,@identiteimg_recto,@identiteimg_verso,@permi_recto,@permi_verso,@passeport_recto,@passeport_verso)", "ExecuteNonQuery", hashtable(clients));
             return new JsonResult("insert Successfully");
         }
         [HttpPut]
         public JsonResult Put(Clients clients)
         {
             
-           ado.crud<bool>("update Clients set Clienttype=@Clienttype,Civilite=@Civilite,Prenom=@Prenom,Nom=@Nom,Date_de_naissance=@Date_de_naissance,Age=@Age,Lieu_de_naissance=@Lieu_de_naissance,Numpermis=@Numpermis,Delivre_le=@Delivre_le,Validite=@Validite,delivre_a=@delivre_a,Adresse=@Adresse,Tel=@Tel,Type_pi=@Type_pi,Numpi=@Numpi,Validite_pi=@Validite_pi,Delivrer_a_pi=@Delivrer_a_pi,Societe=@Societe,ADresse_de_facturation=@ADresse_de_facturation,ICE=@ICE,Contact=@Contact,Listenoir=@Listenoir,identiteimg_recto=@identiteimg_recto,identiteimg_verso=@identiteimg_verso,permi_recto=@permi_recto,permi_verso=@permi_verso,passeport_recto=@passeport_recto,passeport_verso=@passeport_verso where numpi = @numpi", "ExecuteNonQuery", hashtable(clients));
+           ado.crud<bool>("update clients set Clienttype=@Clienttype,Civilite=@Civilite,Prenom=@Prenom,Nom=@Nom,Date_de_naissance=@Date_de_naissance,Age=@Age,Lieu_de_naissance=@Lieu_de_naissance,Numpermis=@Numpermis,Delivre_le=@Delivre_le,Validite=@Validite,delivre_a=@delivre_a,Adresse=@Adresse,Tel=@Tel,Type_pi=@Type_pi,Numpi=@Numpi,Validite_pi=@Validite_pi,Delivrer_a_pi=@Delivrer_a_pi,Societe=@Societe,ADresse_de_facturation=@ADresse_de_facturation,ICE=@ICE,Contact=@Contact,Listenoir=@Listenoir,identiteimg_recto=@identiteimg_recto,identiteimg_verso=@identiteimg_verso,permi_recto=@permi_recto,permi_verso=@permi_verso,passeport_recto=@passeport_recto,passeport_verso=@passeport_verso where numpi = @numpi", "ExecuteNonQuery", hashtable(clients));
             return new JsonResult("update Successfully");
         }
         [HttpDelete("{id}")]
@@ -89,7 +102,7 @@ namespace CarRentalWebApi.Controllers
         {
             Hashtable par = new Hashtable();
             par.Add("cin", id);
-            ado.crud<bool>("delete from Clients where Numpi = @cin", "ExecuteNonQuery", par);
+            ado.crud<bool>("delete from clients where Numpi = @cin", "ExecuteNonQuery", par);
             return new JsonResult("Deleted Successfully");
         }
 

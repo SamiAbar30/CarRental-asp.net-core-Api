@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using System.Data.Sql;
 using System.Data;
 using System.Collections;
-
+//using MySql.Data.MySqlClient;
 using System.IO;
 using System.Drawing;
 using System.Configuration;
@@ -19,6 +20,7 @@ namespace CarRentalWebApi.Controllers
    public class Ado 
     {
         string connc = "";
+  
         public  SqlConnection cnx;
         public SqlConnection cnx1;
         private readonly IConfiguration _configuration;

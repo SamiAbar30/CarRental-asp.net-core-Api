@@ -29,7 +29,7 @@ namespace CarRentalWebApi.Controllers
         public JsonResult vehiculesoui()
         {
             dt = new DataTable();
-            dt = ado.crud<DataTable>("select * from Vehicules where disponibilite = 'oui' ", "ExecuteReader");
+            dt = ado.crud<DataTable>("select Immatricule,Marque from vehicules where disponibilite = 'oui' ", "ExecuteReader");
             return new JsonResult(dt);
         }
 
@@ -37,7 +37,7 @@ namespace CarRentalWebApi.Controllers
         public JsonResult vehiculesnone()
         {
             dt = new DataTable();
-            dt = ado.crud<DataTable>("select * from Vehicules where disponibilite = 'non' ", "ExecuteReader");
+            dt = ado.crud<DataTable>("select Immatricule,Marque from vehicules where disponibilite = 'non' ", "ExecuteReader");
             return new JsonResult(dt);
         }
         [Route("vehiculesproch")]
@@ -45,8 +45,8 @@ namespace CarRentalWebApi.Controllers
         {
             
                 DataTable dt4 = new DataTable();
-                dt4.Columns.Add("immatricule", typeof(string));
-                dt4.Columns.Add("marque", typeof(string));
+                dt4.Columns.Add("Immatricule", typeof(string));
+                dt4.Columns.Add("Marque", typeof(string));
                 int j = 0;
                 string date = "";
                 string datemoinsAlert = "";
@@ -83,11 +83,11 @@ namespace CarRentalWebApi.Controllers
             
           
         }
-        [Route("vehiculesK")]
-        public JsonResult vehiculesK()
+        [Route("vehiculesKM")]
+        public JsonResult vehiculesKM()
         {
             dt = new DataTable();
-            dt = ado.crud<DataTable>("select Immatricule,marque,idContrats from Contrats where facturé=0  AND Duree_retour <=  getdate() ", "ExecuteReader");
+            dt = ado.crud<DataTable>("select Immatricule,marque,idContrats from contrats where facturé=0  AND Duree_retour <=  getdate() ", "ExecuteReader");
             return new JsonResult(dt);
         }
         [Route("updatevehiculesKM")]
@@ -96,9 +96,9 @@ namespace CarRentalWebApi.Controllers
         {
             try
             {
-                ado.crud<bool>("update Contrats set facturé=1   where idContrats = '" + dashV.idContrats.ToString() + "'", "ExecuteNonQuery");
+                ado.crud<bool>("update contrats set facturé=1   where id = '" + dashV.idContrats.ToString() + "'", "ExecuteNonQuery");
 
-                ado.crud<bool>("update Vehicules set disponibilite = 'oui',Kilometrage="+ dashV.Kilometrage + " where Immatricule = '" + dashV.ToString()+ "'", "ExecuteNonQuery");
+                ado.crud<bool>("update vehicules set disponibilite = 'oui',Kilometrage="+ dashV.Kilometrage + " where Immatricule = '" + dashV.Immatricule.ToString()+ "'", "ExecuteNonQuery");
 
                 return new JsonResult("update Successfully");
             }
@@ -112,7 +112,7 @@ namespace CarRentalWebApi.Controllers
         public JsonResult revenuees()
         {
             dt = new DataTable();
-            dt = ado.crud<DataTable>("select DATEPART(month,Datecontrat) as 'm',sum(total)  as 't' from Contrats group by DATEPART(month,Datecontrat) order by 'm' asc", "ExecuteReader");
+            dt = ado.crud<DataTable>("select DATEPART(month,Datecontrat) as 'm',sum(total)  as 't' from contrats group by DATEPART(month,Datecontrat) order by 'm' asc", "ExecuteReader");
             List<int> tablerevenuees=new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             for (var i = 0; i < dt.Rows.Count; i++)
             {
@@ -132,7 +132,7 @@ namespace CarRentalWebApi.Controllers
         public JsonResult depances()
         {
             dt = new DataTable();
-            dt = ado.crud<DataTable>("select DATEPART(month,Date_Entretien) as 'm',  SUM( e.Cout+v.cout)  as 't' from Vidange v join Entretien e on e.Immatricule = v.Immatricule group by DATEPART(month,Date_Entretien) order by 'm' asc", "ExecuteReader");
+            dt = ado.crud<DataTable>("select DATEPART(month,Date_Entretien) as 'm',  SUM( e.Cout+v.cout)  as 't' from Vidange v join entretien e on e.Immatricule = v.Immatricule group by DATEPART(month,Date_Entretien) order by 'm' asc", "ExecuteReader");
 
             List<int> tabledepances = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             for (var i = 0; i < dt.Rows.Count; i++)
@@ -152,7 +152,7 @@ namespace CarRentalWebApi.Controllers
         public JsonResult contrat()
         {
             dt = new DataTable();
-            dt = ado.crud<DataTable>("select DATEPART(month,Datecontrat) as 'M',count(*) as 'C'  from Contrats group by DATEPART(month,Datecontrat)order by 'm' asc", "ExecuteReader");
+            dt = ado.crud<DataTable>("select DATEPART(month,Datecontrat) as 'M',count(*) as 'C'  from contrats group by DATEPART(month,Datecontrat)order by 'm' asc", "ExecuteReader");
 
             List<int> tablecontrat = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             for (var i = 0; i < dt.Rows.Count; i++)

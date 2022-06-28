@@ -30,51 +30,55 @@ namespace CarRentalWebApi.Controllers
             ado = new Ado(configuration);
              
         }
-
         [HttpGet]
         public JsonResult get()
         {
             dt = new DataTable();
-            dt = ado.crud<DataTable>("select * from Vehicules ", "ExecuteReader");
+            dt = ado.crud<DataTable>("select carimg,Immatricule,Marque,Model,Kilometrage,Disponibilite,Prix,Carburant from vehicules ", "ExecuteReader");
+            return new JsonResult(dt);
+        }
+        [Route("Vehiculedisp")]
+        [HttpGet]
+        public JsonResult Vehiculedisp()
+        {
+            try
+            {
+                dt = new DataTable();
+                dt = ado.crud<DataTable>("select Immatricule,Marque,Model,Kilometrage,Prix,Carburant,Disponibilite from vehicules ", "ExecuteReader");
+            }
+            catch { }
+            return new JsonResult(dt);
+        }
+        [Route("Vehicule/{id}")]
+        public JsonResult Vehicule(string id)
+        {
+            try
+            {
+                dt = new DataTable();
+                dt = ado.crud<DataTable>("select * from vehicules where Immatricule ='" + id + "'", "ExecuteReader");
+            }
+            catch
+            {
+
+            }
             return new JsonResult(dt);
         }
         [Route("VehiclesImmatricule")]
         public JsonResult VehiclesImmatricule()
         {
             dt = new DataTable();
-            dt = ado.crud<DataTable>("select Immatricule from Vehicules ", "ExecuteReader");
+            dt = ado.crud<DataTable>("select Immatricule from vehicules ", "ExecuteReader");
             return new JsonResult(dt);
         }
-        //[HttpGet("{id}")]
-        //public JsonResult get(string id)
-        //{
-        //    dt = new DataTable();
-        //    dt = ado.crud<DataTable>("select * from Vehicules where Immatricule='" + id + "'", "ExecuteReader");
-        //    return new JsonResult(dt);
-        //}
-        //[Route("getallVehicules")]
-        //public JsonResult getallVehicules()
-        //{
-        //    dt = new DataTable();
-        //    dt = ado.crud<DataTable>("select Immatricule from Vehicules ", "ExecuteReader");
-        //    return new JsonResult(dt);
-        //}
-        //[Route("Vehiculesdisponibilite/{val}")]
-        //public JsonResult Vehiculesdisponibilite(string val)
-        //{
-        //    dt = new DataTable();
-        //    dt = ado.crud<DataTable>("select * from Vehicules where disponibilite = '"+val+"' ", "ExecuteReader");
-        //    return new JsonResult(dt);
-        //}
-
         [HttpPost]
         public JsonResult Post(Vehicules vehicules)
         {
             try
             {
-                ado.crud<bool>("insert into Vehicules values('" + vehicules.Immatricule + "','" + vehicules.Marque + "','" + vehicules.Model + "','" + vehicules.Date_MEC + "'," + Convert.ToInt32(vehicules.Kilometrage) + "," + Convert.ToInt32(vehicules.KM_inclus) + ",'" + vehicules.Disponibilite + "'," + Convert.ToInt32(vehicules.Prix) + ",'" + vehicules.Carburant + "','" + vehicules.carimg + "','" + vehicules.cartegrise_recto + "','" + vehicules.cartegrise_verso + "','" + vehicules.image3_recto + "','" + vehicules.image4_verso + "')", "ExecuteNonQuery");
+                ado.crud<bool>("insert into vehicules values('" + vehicules.Immatricule + "','" + vehicules.Marque + "','" + vehicules.Model + "','" + vehicules.Date_MEC + "'," + Convert.ToInt32(vehicules.Kilometrage) + "," + Convert.ToInt32(vehicules.KM_inclus) + ",'" + vehicules.Disponibilite + "'," + Convert.ToInt32(vehicules.Prix) + ",'" + vehicules.Carburant + "','" + vehicules.carimg + "','" + vehicules.cartegrise_recto + "','" + vehicules.cartegrise_verso + "','" + vehicules.image3_recto + "','" + vehicules.image4_verso + "')", "ExecuteNonQuery");
+               ado.crud<bool>("insert into papier(immatricule) values('" + vehicules.Immatricule + "')", "ExecuteNonQuery");
 
-            return new JsonResult("insert Successfully");
+                return new JsonResult("insert Successfully");
         }
             catch
             {
@@ -86,7 +90,7 @@ namespace CarRentalWebApi.Controllers
         {
             try
             {
-                ado.crud<bool>("update Vehicules set carimg='" + vehicules.carimg + "',Marque='" + vehicules.Marque + "',Model='" + vehicules.Model + "',Date_MEC='" + vehicules.Date_MEC + "',Kilometrage=" + Convert.ToInt32(vehicules.Kilometrage) + ",KM_inclus=" + Convert.ToInt32(vehicules.KM_inclus) + ",Disponibilite='" + vehicules.Disponibilite + "',Prix=" + Convert.ToInt32(vehicules.Prix) + ",Carburant='" + vehicules.Carburant + "',cartegrise_recto='" + vehicules.cartegrise_recto + "',cartegrise_verso='" + vehicules.cartegrise_verso + "',image3_recto='" + vehicules.image3_recto + "',image4_verso='" + vehicules.image4_verso + "' where Immatricule ='" + vehicules.Immatricule + "'", "ExecuteNonQuery");
+                ado.crud<bool>("update vehicules set carimg='" + vehicules.carimg + "',Marque='" + vehicules.Marque + "',Model='" + vehicules.Model + "',Date_MEC='" + vehicules.Date_MEC + "',Kilometrage=" + Convert.ToInt32(vehicules.Kilometrage) + ",KM_inclus=" + Convert.ToInt32(vehicules.KM_inclus) + ",Disponibilite='" + vehicules.Disponibilite + "',Prix=" + Convert.ToInt32(vehicules.Prix) + ",Carburant='" + vehicules.Carburant + "',cartegrise_recto='" + vehicules.cartegrise_recto + "',cartegrise_verso='" + vehicules.cartegrise_verso + "',image3_recto='" + vehicules.image3_recto + "',image4_verso='" + vehicules.image4_verso + "' where Immatricule ='" + vehicules.Immatricule + "'", "ExecuteNonQuery");
 
                 return new JsonResult("update Successfully");
             }
@@ -99,34 +103,8 @@ namespace CarRentalWebApi.Controllers
         [HttpDelete("{id}")]
         public JsonResult Delete(string id)
         {
-            ado.crud<bool>("delete from Vehicules where Immatricule='" + id + "'", "ExecuteNonQuery");
+            ado.crud<bool>("delete from vehicules where Immatricule='" + id + "'", "ExecuteNonQuery");
             return new JsonResult("Deleted Successfully");
-        }
-
-          
-        [Route("SavePhotoVehicules")]
-        [HttpPost]
-        public JsonResult SavePhotoVehicules()
-        {
-            try
-            {
-                var httpRequest = Request.Form;
-                var postedFile = httpRequest.Files[0];
-                string filename = postedFile.FileName;
-                var physicalPath = _env.ContentRootPath + "/Photos/Vehicules/" + filename;
-
-                using (var stream = new FileStream(physicalPath, FileMode.Create))
-                {
-                    postedFile.CopyTo(stream);
-                }
-
-                return new JsonResult(filename);
-            }
-            catch (Exception)
-            {
-
-                return new JsonResult("anonymous.png");
-            }
         }
         [Route("StatistiquesVehicles/{date}")]
         public JsonResult StatistiquesVehicles(string date)
@@ -149,7 +127,7 @@ namespace CarRentalWebApi.Controllers
             dc = new DataColumn("total", typeof(int));
             dt.Columns.Add(dc);
             i = 0;
-            dt1 = ado.crud<DataTable>("select Immatricule from Vehicules", "ExecuteReader");
+            dt1 = ado.crud<DataTable>("select Immatricule from vehicules", "ExecuteReader");
             dt.Rows.Clear();
 
             foreach (DataRow dtRow in dt1.Rows)

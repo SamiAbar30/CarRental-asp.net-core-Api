@@ -27,7 +27,7 @@ namespace CarRentalWebApi.Controllers
         public JsonResult get()
         {
             dt = new DataTable();
-            dt = ado.crud<DataTable>("select * from Entretien ", "ExecuteReader");
+            dt = ado.crud<DataTable>("select * from entretien ", "ExecuteReader");
             return new JsonResult(dt);
         }
         [HttpPost]
@@ -35,7 +35,7 @@ namespace CarRentalWebApi.Controllers
         {
             try
             {
-                ado.crud<bool>("insert into Entretien values('" +entretien.Immatricule + "'," + entretien.Km_Actuel + ",'" + entretien.Date_Entretien + "','" + entretien.Type_de_Entretien + "'," + entretien.Cout + ",'" + entretien.Observation + "')", "ExecuteNonQuery");
+                ado.crud<bool>("insert into entretien values('" +entretien.Immatricule + "'," + entretien.Km_Actuel + ",'" + entretien.Date_Entretien + "','" + entretien.Type_de_Entretien + "'," + entretien.Cout + ",'" + entretien.Observation + "')", "ExecuteNonQuery");
 
                 return new JsonResult("insert Successfully");
         }
@@ -49,7 +49,7 @@ namespace CarRentalWebApi.Controllers
         {
             try
             {
-                ado.crud<bool>(@"update Entretien set  Immatricule='" + entretien.Immatricule + "',Km_Actuel=" + Convert.ToInt32(entretien.Km_Actuel) + ",Date_Entretien='" + entretien.Date_Entretien + "',Type_de_Entretien='" + entretien.Type_de_Entretien + "',Cout=" + Convert.ToInt32(entretien.Cout) + ",Observation='" + entretien.Observation + "' where idEntretien=" + entretien.idEntretien, "ExecuteNonQuery");
+                ado.crud<bool>(@"update entretien set  Immatricule='" + entretien.Immatricule + "',Km_Actuel=" + Convert.ToInt32(entretien.Km_Actuel) + ",Date_Entretien='" + entretien.Date_Entretien + "',Type_de_Entretien='" + entretien.Type_de_Entretien + "',Cout=" + Convert.ToInt32(entretien.Cout) + ",Observation='" + entretien.Observation + "' where id=" + entretien.idEntretien, "ExecuteNonQuery");
 
                 return new JsonResult("update Successfully");
             }
@@ -62,7 +62,7 @@ namespace CarRentalWebApi.Controllers
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
-            ado.crud<bool>("delete from Entretien where idEntretien=" +id+ "", "ExecuteNonQuery");
+            ado.crud<bool>("delete from entretien where id=" +id+ "", "ExecuteNonQuery");
             return new JsonResult("Deleted Successfully");
         }
     }

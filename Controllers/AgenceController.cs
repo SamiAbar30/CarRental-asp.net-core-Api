@@ -30,7 +30,7 @@ namespace CarRentalWebApi.Controllers
         public JsonResult get()
         {
             dt = new DataTable();
-            dt = ado.crud<DataTable>("select * from Agence ", "ExecuteReader");
+            dt = ado.crud<DataTable>("select * from agence ", "ExecuteReader");
             return new JsonResult(dt);
         }
        
@@ -39,7 +39,7 @@ namespace CarRentalWebApi.Controllers
         {
 
             
-            ado.crud<bool>("update Agence set Logo='" + deagence.Logo + "', NomAgence='" + deagence.NomAgence + "',Adresse='" + deagence.Adresse + "',Ville='" + deagence.Ville + "',Code_postale='" + deagence.Code_postale + "',Tel='" + deagence.Tel + "',E_mail='" + deagence.E_mail + "',Gsm='" + deagence.Gsm + "',Fax='" + deagence.Fax + "',Patant='" + deagence.Patant + "',IF_F='" + deagence.IF_F + "',RC='" + deagence.RC + "',ICE='" + deagence.ICE + "',CNSS = '" + deagence.CNSS + "'", "ExecuteNonQuery");
+           ado.crud<bool>("update agence set Logo='" + deagence.Logo + "', NomAgence='" + deagence.NomAgence + "',Adresse='" + deagence.Adresse + "',Ville='" + deagence.Ville + "',Code_postale='" + deagence.Code_postale + "',Tel='" + deagence.Tel + "',E_mail='" + deagence.E_mail + "',Gsm='" + deagence.Gsm + "',Fax='" + deagence.Fax + "',Patant='" + deagence.Patant + "',IF_F='" + deagence.IF_F + "',RC='" + deagence.RC + "',ICE='" + deagence.ICE + "',CNSS = '" + deagence.CNSS + "'", "ExecuteNonQuery");
 
             return new JsonResult("update Successfully");
         }
